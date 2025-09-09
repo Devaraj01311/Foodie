@@ -18,7 +18,7 @@ const Cart = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:6001/api/orders", {
+      const res = await fetch("https://foodie-0.onrender.com/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
