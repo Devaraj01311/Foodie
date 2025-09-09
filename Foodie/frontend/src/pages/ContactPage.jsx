@@ -12,7 +12,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:6001/api/contact", form);
+      const res = await axios.post("https://foodie-0b.onrender.com/api/contact", form);
       if (res.data.success) {
         setStatus("Message sent successfully!");
         setForm({ name: "", email: "", message: "" });
