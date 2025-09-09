@@ -1,4 +1,4 @@
-# Foodie🍴 Foodie – Online Food Ordering & Delivery Platform
+🍴 Foodie – Online Food Ordering & Delivery Platform
 
 Foodie is a full-stack MERN application for online food ordering and delivery.
 Users can browse restaurants, place orders, and track them in real-time.
@@ -82,23 +82,6 @@ View orders and system analytics
 
 🐙 Git/GitHub – Version control
 
-📂 Project Structure
-Foodie/
-│── backend/              # Node.js + Express API
-│   ├── server.js         # App entry point
-│   ├── models/           # Mongoose schemas
-│   ├── routes/           # API endpoints
-│   ├── controllers/      # Business logic
-│   ├── middlewares/      # Auth & validation
-│   └── .env              # Env variables
-│
-│── frontend/             # React + Vite frontend
-│   ├── src/
-│   │   ├── pages/        # Screens (Home, Login, Orders, etc.)
-│   │   ├── components/   # Reusable UI components
-│   │   ├── context/      # State management
-│   │   └── assets/       # Static files
-│   └── .env              # Env variables
 
 ⚙️ Installation & Setup
 1️⃣ Clone Repo
