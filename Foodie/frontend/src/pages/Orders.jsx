@@ -9,7 +9,7 @@ const Orders = () => {
       if (!token) return;
 
       try {
-        const res = await fetch("http://localhost:6001/api/orders", {
+        const res = await fetch("https://foodie-0b.onrender.com/api/orders", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
