@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:6001/api",
+  baseURL: "https://foodie-0.onrender.com",
 });
 
 export default API;
