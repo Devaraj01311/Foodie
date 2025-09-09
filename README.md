@@ -5,7 +5,8 @@ Users can browse restaurants, place orders, and track them in real-time.
 Restaurant  can accept orders, update status, and user can get the email about the order status.
 
 🚀 Features
-👤 User
+
+## User
 
 Signup/Login with JWT authentication
 
@@ -16,7 +17,7 @@ Place orders securely
 View order history
 
 
-Restaurant
+## Restaurant
 
 Signup/Login with authentication
 
@@ -28,59 +29,10 @@ Receive new delivery requests
 
 Accept/Reject orders
 
-
-
 Update status: preparing → compelted → Delivered this status will go to user registered email
-
 
 View orders and system analytics
 
-🛠️ Tech Stack
-🌐 Frontend
-
-⚛️ React 19 – UI framework
-
-🎨 Tailwind CSS – Styling
-
-🎞️ Framer Motion – Animations
-
-🎭 Lucide-React & React Icons – Icons
-
-🔗 Axios – API calls
-
-🛣️ React Router v7 – Routing
-
-🎠 React-Slick & Slick Carousel – Sliders
-
-🔑 JWT Decode – Authentication
-
-🖥️ Backend
-
-🟢 Node.js + Express.js – API server
-
-🗄️ MongoDB + Mongoose – Database
-
-🔑 JWT (jsonwebtoken) – Authentication
-
-🔒 bcryptjs – Password hashing
-
-📧 Nodemailer – Email services (notifications / password reset)
-
-🌍 CORS + Cookie Parser – Security & sessions
-
-⚡ Dotenv – Environment variables
-
-🔧 Dev Tools
-
-🧩 Vite – Frontend build tool
-
-🔁 Nodemon – Hot reload for backend
-
-🧹 ESLint – Code linting
-
-🎨 PostCSS + Autoprefixer – CSS processing
-
-🐙 Git/GitHub – Version control
 
 
 ⚙️ Installation & Setup
@@ -120,9 +72,7 @@ Run client:
 
 npm run dev
 
-
-
-🔍 How It Works
+## how It Works
 
 User logs in → Places order → Request saved in MongoDB.
 
@@ -134,6 +84,3 @@ User tracks order via email and status on email id.
 
 
 
-👨‍💻 Contributors
-
-You – Full-stack Developer 🚀
