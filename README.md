@@ -4,16 +4,16 @@
 
 ---
 
-## 🚀 Features
+## Features
 
-### ✅ User Features
+### User Features
 
 * Secure signup/login using **JWT authentication**
 * Browse restaurants and food items
 * Add items to cart and place orders
 * View order history and track orders via email notifications
 
-### ✅ Restaurant Features
+### Restaurant Features
 
 * Signup/login with authentication
 * Add and manage restaurants and menu items
@@ -77,7 +77,7 @@ npm run dev
 
 ---
 
-## 📂 How It Works
+## How It Works
 
 1. **User Journey**:
 
@@ -222,12 +222,10 @@ npm run dev
 
 ---
 
-## 📬 Contact
+##  Contact
 
 For questions, contributions, or support, feel free to reach out:
-✉️ [your-email@example.com](mailto:your-email@example.com)
-🔗 [GitHub Profile](https://github.com/your-username)
+Email:devarajldev01@gmail.com
 
 ---
 
-*Make sure to replace placeholders like `your-username`, `your-email@example.com`, and connection strings before publishing the repository.*
