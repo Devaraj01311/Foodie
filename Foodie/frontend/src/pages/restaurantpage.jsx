@@ -28,7 +28,7 @@ const RestaurantPage = () => {
   };
 
   useEffect(() => {
-    fetch("http://localhost:6001/api/restaurants")
+    fetch("https://foodie-0b.onrender.com/api/restaurants")
       .then((res) => res.json())
       .then((data) => setRestaurants(data))
       .catch((err) => console.error("Error fetching restaurants:", err));

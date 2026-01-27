@@ -12,7 +12,7 @@ const AdminOrders = () => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("http://localhost:6001/api/admin/orders", {
+      const res = await fetch("https://foodie-0b.onrender.com/api/admin/orders", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
@@ -34,7 +34,7 @@ const AdminOrders = () => {
     setError("");
     try {
       const res = await fetch(
-        `http://localhost:6001/api/admin/orders/${orderId}`,
+        `https://foodie-0b.onrender.com/api/admin/orders/${orderId}`,
         {
           method: "PUT",
           headers: {
