@@ -45,7 +45,7 @@ const AdminLayout = () => {
         <Link
   className="text-gray-800 font-extrabold text-3xl tracking-wide hover:text-orange-400 transition flex flex-col"
 >
-  <span>Foodie</span>
+  <span>EATOZ</span>
   <div className="flex items-center mt-1 text-sm">
     <i className="fas fa-map-marker-alt"></i>
     <span className="ml-1 text-gray-600 font-thin ">

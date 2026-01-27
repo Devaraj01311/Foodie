@@ -25,7 +25,7 @@ const RestaurantFooter = () => {
                 <path d="M15 9h.01" />
               </svg>
             </span>
-            Foodie Restaurant
+            EATOZ Restaurant
           </h2>
           <p className="mt-2 text-sm">
             Manage restaurants, menus, and orders with ease.  
@@ -111,7 +111,7 @@ const RestaurantFooter = () => {
         </div>
       </div>
       <div className="bg-gray-800 text-center py-4 text-sm border-t border-gray-700">
-        © {new Date().getFullYear()} Foodie Restaurant Panel. All Rights Reserved.
+        © {new Date().getFullYear()} EATOZ Restaurant Panel. All Rights Reserved.
       </div>
     </footer>
   );

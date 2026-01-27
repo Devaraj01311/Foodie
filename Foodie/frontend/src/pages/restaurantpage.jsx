@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import RestaurantMenu from "../Components/restaurantMenu";
 import Slider from "react-slick";
@@ -9,7 +8,7 @@ const RestaurantPage = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
 
-   const images = [
+  const images = [
     "/image/image.jpg",
     "/image/offer1.jpg",
     "/image/offer2.jpg",
@@ -25,7 +24,7 @@ const RestaurantPage = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
-    arrows: true,
+    arrows: false, // Better for mobile
   };
 
   useEffect(() => {
@@ -45,56 +44,71 @@ const RestaurantPage = () => {
   }
 
   return (
-    <div className="bg-gray-100 mt-2 ml-2 mr-2 min-h-screen">
-       <Slider {...settings} className="h-full">
+    <div className="bg-gray-100 mt-2 mx-2 min-h-screen">
+      
+      {/* Slider */}
+      <Slider {...settings} className="rounded-2xl overflow-hidden">
         {images.map((src, index) => (
-        <div key={index}>
-          <img
-          src={src}
-          alt={`Restaurant ${index + 1}`}
-className="w-full h-[450px] object-cover object-center rounded-t-lg rounded-b-2xl"
-          />
-        </div>
+          <div key={index}>
+            <img
+              src={src}
+              alt={`Slide ${index + 1}`}
+              className="w-full h-[200px] sm:h-[300px] md:h-[450px] object-cover rounded-xl"
+            />
+          </div>
         ))}
       </Slider>
-      <div className="p-8">
-      <h2 className="text-3xl text-orange-500 font-bold mb-6">
-        Available Restaurants
-      </h2>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {restaurants.map((restaurant) => (
-        <div
-          key={restaurant._id}
-          className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition flex flex-col h-full"
-        >
-          {restaurant.image && (
-          <img
-            src={restaurant.image}
-            alt={restaurant.name}
-            className="w-full h-60 object-cover rounded-lg mb-4 transform transition-transform duration-300 ease-in-out hover:scale-110"
-          />
-          )}
-          <h3 className="text-2xl font-semibold">{restaurant.name}</h3>
-          <div className="mt-2">
-          <p className="text-gray-600 text-2xl">{restaurant.cuisine}</p>
-          <p className="text-gray-500 text-1xl mt-2">⭐{restaurant.rating}</p>
-          </div>
-          <div className="flex-1"></div>
-          <div className="flex justify-end mt-4">
-          <button
-            className="px-4 py-2 bg-orange-300 text-white rounded hover:bg-orange-600 transition"
-            onClick={() => setSelectedRestaurant(restaurant)}
-          >
-            View
-          </button>
-          </div>
+
+      {/* Restaurant List */}
+      <div className="p-4 sm:p-6 md:p-8">
+        <h2 className="text-2xl sm:text-3xl text-orange-500 font-bold mb-4 sm:mb-6">
+          Available Restaurants
+        </h2>
+
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          {restaurants.map((restaurant) => (
+            <div
+              key={restaurant._id}
+              className="bg-white rounded-xl shadow-md p-4 sm:p-6 hover:shadow-lg transition flex flex-col"
+            >
+              {restaurant.image && (
+                <img
+                  src={restaurant.image}
+                  alt={restaurant.name}
+                  className="w-full h-40 sm:h-52 md:h-60 object-cover rounded-lg mb-3 transform transition-transform duration-300 ease-in-out hover:scale-105"
+                />
+              )}
+
+              <h3 className="text-xl sm:text-2xl font-semibold">
+                {restaurant.name}
+              </h3>
+
+              <div className="mt-2">
+                <p className="text-gray-600 text-lg sm:text-xl">
+                  {restaurant.cuisine}
+                </p>
+                <p className="text-gray-500 text-sm sm:text-lg mt-1">
+                  ⭐ {restaurant.rating}
+                </p>
+              </div>
+
+              <div className="flex-1"></div>
+
+              <div className="flex justify-end mt-4">
+                <button
+                  className="px-4 py-2 bg-orange-400 text-white rounded-lg hover:bg-orange-600 transition text-sm sm:text-base"
+                  onClick={() => setSelectedRestaurant(restaurant)}
+                >
+                  View
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-        ))}
       </div>
-      </div>
-      
+
     </div>
-    );
+  );
 };
 
 export default RestaurantPage;

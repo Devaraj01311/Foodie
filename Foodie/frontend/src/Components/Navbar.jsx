@@ -20,7 +20,7 @@ const Navbar = ({ type }) => {
           to={token ? "/home" : "/"}
           className="text-red-500 font-extrabold text-3xl tracking-wide hover:text-red-600 transition"
         >
-         Foodie
+          FOODIE
         <div className="flex items-center mr-3 text-sm ">
           <i className="fas fa-map-marker-alt"></i>
           <span className="ml-1 text-gray-800 font-thin hover:text-red-500 transition text-sm">Bengaluru</span>
