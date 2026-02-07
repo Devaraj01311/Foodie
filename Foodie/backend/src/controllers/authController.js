@@ -89,7 +89,6 @@ exports.logout = (req, res) => {
 // FORGOT PASSWORD
 
 exports.forgotPassword = async (req, res) => {
-  // 1. Always use 'const' or 'let'
   const FRONT_URL = process.env.FRONT_URL; 
   const { email } = req.body;
 
@@ -99,32 +98,37 @@ exports.forgotPassword = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // 2. Generate reset token
     const resetToken = crypto.randomBytes(32).toString("hex");
 
-    // 3. Hash and save to database
     user.resetPasswordToken = crypto
       .createHash("sha256")
       .update(resetToken)
       .digest("hex");
     
-    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; 
 
     await user.save({ validateBeforeSave: false });
 
-    // 4. Create Reset URL (Check for typos here!)
     const resetUrl = `${FRONT_URL}/reset-password/${resetToken}`;
 
-    // 5. Setup Transporter (Use Gmail App Password)
+    // --- UPDATED TRANSPORTER START ---
     const transporter = nodemailer.createTransport({
-      service: "Gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // Must be false for port 587
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // This must be the 16-character App Password
+        pass: process.env.EMAIL_PASS,
       },
+      tls: {
+        // This helps bypass network restrictions on cloud servers
+        rejectUnauthorized: false,
+        minVersion: "TLSv1.2"
+      },
+      connectionTimeout: 10000, // Wait 10 seconds before timing out
     });
+    // --- UPDATED TRANSPORTER END ---
 
-    // 6. Send Mail
     await transporter.sendMail({
       from: `"Foodie Support" <${process.env.EMAIL_USER}>`,
       to: user.email,
@@ -133,9 +137,11 @@ exports.forgotPassword = async (req, res) => {
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px;">
           <h2 style="color: #333;">Password Reset</h2>
           <p>You requested a password reset. Click the button below to proceed:</p>
-          <a href="${resetUrl}" style="display: inline-block; padding: 12px 24px; background-color: #fbbf24; color: #000; text-decoration: none; font-weight: bold; border-radius: 8px;">
-            Reset My Password
-          </a>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetUrl}" style="display: inline-block; padding: 12px 24px; background-color: #fbbf24; color: #000; text-decoration: none; font-weight: bold; border-radius: 8px;">
+              Reset My Password
+            </a>
+          </div>
           <p style="margin-top: 20px; color: #666; font-size: 12px;">This link will expire in 15 minutes.</p>
         </div>
       `,
@@ -144,8 +150,8 @@ exports.forgotPassword = async (req, res) => {
     res.json({ message: "Password reset link sent to email" });
 
   } catch (err) {
-    console.error("EMAIL ERROR:", err); // This is where you saw the 't is not defined' error
-    res.status(500).json({ error: "Failed to send email. Please try again." });
+    console.error("EMAIL ERROR:", err); 
+    res.status(500).json({ error: "Failed to send email due to connection timeout. Please try again." });
   }
 };
 
