@@ -1,8 +1,8 @@
 const User = require("../model/user");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const nodemailer = require("nodemailer");
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // REGISTER
 exports.register = async (req, res) => {
@@ -94,64 +94,27 @@ exports.forgotPassword = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    if (!user) return res.status(404).json({ error: "User not found" });
 
     const resetToken = crypto.randomBytes(32).toString("hex");
-
-    user.resetPasswordToken = crypto
-      .createHash("sha256")
-      .update(resetToken)
-      .digest("hex");
-    
+    user.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
     user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; 
-
     await user.save({ validateBeforeSave: false });
 
     const resetUrl = `${FRONT_URL}/reset-password/${resetToken}`;
 
-    // --- UPDATED TRANSPORTER START ---
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // Must be false for port 587
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-      tls: {
-        // This helps bypass network restrictions on cloud servers
-        rejectUnauthorized: false,
-        minVersion: "TLSv1.2"
-      },
-      connectionTimeout: 10000, // Wait 10 seconds before timing out
-    });
-    // --- UPDATED TRANSPORTER END ---
-
-    await transporter.sendMail({
-      from: `"Foodie Support" <${process.env.EMAIL_USER}>`,
+    // SEND VIA RESEND API (Cannot be blocked by Render)
+    await resend.emails.send({
+      from: 'Foodie Support <onboarding@resend.dev>', 
       to: user.email,
-      subject: "Password Reset Request",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px;">
-          <h2 style="color: #333;">Password Reset</h2>
-          <p>You requested a password reset. Click the button below to proceed:</p>
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${resetUrl}" style="display: inline-block; padding: 12px 24px; background-color: #fbbf24; color: #000; text-decoration: none; font-weight: bold; border-radius: 8px;">
-              Reset My Password
-            </a>
-          </div>
-          <p style="margin-top: 20px; color: #666; font-size: 12px;">This link will expire in 15 minutes.</p>
-        </div>
-      `,
+      subject: 'Password Reset Request',
+      html: `<p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`
     });
 
     res.json({ message: "Password reset link sent to email" });
-
   } catch (err) {
-    console.error("EMAIL ERROR:", err); 
-    res.status(500).json({ error: "Failed to send email due to connection timeout. Please try again." });
+    console.error("EMAIL ERROR:", err);
+    res.status(500).json({ error: "Email service unavailable" });
   }
 };
 
