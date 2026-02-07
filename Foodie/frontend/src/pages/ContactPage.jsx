@@ -39,7 +39,7 @@ const Contact = () => {
   return (
     <div className="min-h-screen bg-[#FDFCFB] pb-20">
       <section className="relative h-[40vh] flex items-center justify-center overflow-hidden rounded-b-[3rem] bg-stone-900 shadow-2xl mx-2 mt-2">
-        <div className="absolute inset-0 opacity-30 bg-[url('https://images.unsplash.com/photo-1534536281715-e28d76689b4d?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center" />
+        <div className="absolute inset-0 opacity-30 bg-[url('/public/phone.png')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-t from-stone-950 to-transparent" />
         
         <div className="relative z-10 text-center">
@@ -50,7 +50,7 @@ const Contact = () => {
           >
             Get in <span className="text-amber-500">Touch</span>
           </motion.h1>
-          <p className="text-stone-400 uppercase tracking-[0.3em] text-[10px] font-bold">Concierge & Support</p>
+          <p className="text-stone-400 uppercase tracking-[0.3em] text-[10px] font-bold">Contact & Support</p>
         </div>
       </section>
 
@@ -88,7 +88,7 @@ const Contact = () => {
               </div>
 
               <div className="space-y-2 border-b border-stone-100 focus-within:border-amber-500 transition-colors py-2">
-                <p className="text-[10px] uppercase font-bold text-stone-400 tracking-widest">Your Inquiry</p>
+                <p className="text-[10px] uppercase font-bold text-stone-400 tracking-widest">Your Message</p>
                 <textarea
                   name="message" rows="4" value={form.message} onChange={handleChange}
                   placeholder="How can our hospitality team assist you?"
@@ -100,7 +100,7 @@ const Contact = () => {
                 type="submit" disabled={loading}
                 className="w-full bg-stone-900 hover:bg-amber-600 text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all shadow-lg active:scale-95"
               >
-                {loading ? "Transmitting..." : <><Send size={18} /> Dispatch Inquiry</>}
+                {loading ? "Sending..." : <><Send size={18} /> Send</>}
               </button>
             </form>
           </motion.div>
@@ -115,17 +115,17 @@ const Contact = () => {
             <div className="bg-stone-900 text-white p-10 rounded-[2.5rem] shadow-xl relative overflow-hidden">
               <Info className="absolute -right-4 -top-4 text-white/5" size={150} />
               <h2 className="text-2xl font-serif italic font-bold mb-4 flex items-center gap-2">
-                Our <span className="text-amber-500">Heritage</span>
+                Our <span className="text-amber-500">Contact</span>
               </h2>
               <p className="text-stone-400 text-sm leading-relaxed mb-6 font-light">
-                Foodie isn't just a delivery service; it's a bridge to Bengaluru's elite culinary scene. We curate experiences that turn a simple meal into a memorable gala.
+                Foodie isn't just a delivery service; it's a bridge to Bengaluru's elite culinary scene. We curate experiences that turn a simple meal into a memorable.
               </p>
               <div className="space-y-4 pt-4 border-t border-white/10">
                 <div className="flex items-center gap-4 text-sm">
                   <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-amber-500">
                     <Mail size={18} />
                   </div>
-                  <span>concierge@foodie.com</span>
+                  <span>contact@foodie.com</span>
                 </div>
                 <div className="flex items-center gap-4 text-sm">
                   <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-amber-500">

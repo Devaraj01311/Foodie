@@ -4,6 +4,9 @@ const sendEmail = require("../utils/sendEmail");
 const User = require("../model/user");
 
 exports.forgotPassword = async (req, res) => {
+ 
+   BASE_URL = process.env.FRONT_URL;
+
   try {
     const { email } = req.body;
 
@@ -15,7 +18,7 @@ exports.forgotPassword = async (req, res) => {
     // generate reset token
     const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
-    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+    const resetUrl = `${BASE_URL}/reset-password/${resetToken}`;
 
     // send email here
     await sendEmail({

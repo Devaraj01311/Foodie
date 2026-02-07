@@ -90,6 +90,7 @@ exports.logout = (req, res) => {
 exports.forgotPassword = async (req, res) => {
 
   BASE_URL = process.env.FRONT_URL;
+  
   const { email } = req.body;
 
   try {

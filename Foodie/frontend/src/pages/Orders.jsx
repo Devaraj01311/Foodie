@@ -6,8 +6,7 @@ import {
   CheckCircle, 
   Truck, 
   XCircle, 
-  ChevronRight, 
-  Receipt,
+  IndianRupee, 
   Calendar,
   Utensils
 } from "lucide-react";
@@ -17,6 +16,14 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
 
   const BASE_URL = import.meta.env.VITE_API_URL;
+
+  const formatPrice = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -58,11 +65,10 @@ const Orders = () => {
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] pb-20">
-      {/* --- Header Section --- */}
+      {/* Header Section */}
       <section className="relative h-[35vh] flex items-center justify-center overflow-hidden rounded-b-[3rem] bg-stone-900 shadow-2xl mx-2 mt-2">
-        <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1974&auto=format&fit=crop')] bg-cover bg-center" />
+        <div className="absolute inset-0 opacity-40 bg-[url('/public/order.png')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-900/40 to-transparent" />
-        
         <div className="relative z-10 text-center px-6">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
@@ -84,7 +90,8 @@ const Orders = () => {
             className="bg-white rounded-[2.5rem] p-16 text-center shadow-xl border border-stone-100"
           >
             <div className="w-20 h-20 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Receipt className="text-stone-200" size={32} />
+           
+              <IndianRupee className="text-stone-200" size={32} />
             </div>
             <h3 className="text-2xl font-serif italic font-bold text-stone-800 mb-2">No Orders Found</h3>
             <p className="text-stone-400 text-sm mb-8 italic">Your culinary adventure is yet to begin.</p>
@@ -117,7 +124,6 @@ const Orders = () => {
                           <h4 className="font-mono text-xs text-stone-800 bg-stone-50 px-2 py-1 rounded">#{order._id.slice(-8).toUpperCase()}</h4>
                         </div>
                       </div>
-
                       <div className="flex items-center gap-3">
                         <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest ${statusUI.color}`}>
                           {statusUI.icon} {order.status}
@@ -135,7 +141,10 @@ const Orders = () => {
                             </span>
                             <span className="text-stone-800 font-medium">{item.name}</span>
                           </div>
-                          <span className="text-stone-400 font-medium text-sm">₹{item.price * item.quantity}</span>
+                          {/* 4. Using the formatting helper */}
+                          <span className="text-stone-400 font-medium text-sm">
+                            {formatPrice(item.price * item.quantity)}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -150,7 +159,10 @@ const Orders = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-[10px] uppercase font-bold text-stone-400 mb-1">Total Paid</p>
-                        <p className="text-2xl font-serif italic font-bold text-stone-900">₹{order.total}</p>
+                        {/* 5. Using the formatting helper */}
+                        <p className="text-2xl font-serif italic font-bold text-stone-900">
+                          {formatPrice(order.total)}
+                        </p>
                       </div>
                     </div>
                   </motion.div>
