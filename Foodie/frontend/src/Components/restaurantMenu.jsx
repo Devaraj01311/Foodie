@@ -1,162 +1,101 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
-import { useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { ChevronLeft, Search, Plus, Minus, ShoppingBag } from "lucide-react";
+import toast from "react-hot-toast";
 
-const RestaurantMenu = ({ restaurant }) => {
+const RestaurantMenu = ({ restaurant, onBack }) => {
   const { addToCart } = useCart();
-  const navigate = useNavigate();
-  const [add, setAdd] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
 
-  useEffect(() => {
-    if (restaurant?.menu) {
-      setAdd(Array(restaurant.menu.length).fill(0));
-    }
-  }, [restaurant]);
-
-  const handleAdd = (idx) => {
-    setAdd((prev) =>
-      prev.map((count, i) => (i === idx ? count + 1 : count))
-    );
-  };
-
-  const handleSubtract = (idx) => {
-    setAdd((prev) =>
-      prev.map((count, i) => (i === idx && count > 0 ? count - 1 : count))
-    );
-  };
-
-  const filteredMenu = restaurant.menu.filter((item) => {
-    const matchesSearch = item.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesFilter =
-      filter === "all" ? true : item.type?.toLowerCase() === filter;
-    return matchesSearch && matchesFilter;
-  });
+  const filteredMenu = restaurant.menu.filter(item => 
+    item.name.toLowerCase().includes(search.toLowerCase()) &&
+    (filter === "all" || item.type?.toLowerCase() === filter)
+  );
 
   return (
-    <div className="mt-5">
-      <div className="relative">
-        <img
-          src="/image/restaurant.jpg"
-          alt="Restaurant"
-          className="w-full h-80 object-cover rounded-t-lg rounded-b-2xl"
-        />
-        <div className="absolute inset-0 flex items-center justify-center mt-8">
-          <h2 className="text-4xl font-bold text-white drop-shadow-lg">
-            Foodie's <span className="text-orange-300">Delight</span>
-          </h2>
-        </div>
-        <h2 className="absolute left-0 bottom-0 bg-white/80 px-6 py-3 text-3xl font-bold text-gray-500 mb-0 rounded-b-2xl w-full text-left">
-          Menu
-        </h2>
-      </div>
-
-      <div className="flex gap-4 mt-4 ml-2 mb-6">
-        <input
-          type="text"
-          placeholder="Search menu..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-30 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-        />
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+    <div className="bg-[#FDFCFB] min-h-screen">
+      <div className="relative h-[40vh] md:h-[50vh]">
+        <img src={restaurant.image || "/image/restaurant.jpg"} className="w-full h-full object-cover" alt="" />
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+        <button 
+          onClick={onBack}
+          className="absolute top-8 left-8 p-4 bg-white/20 backdrop-blur-md text-white rounded-2xl hover:bg-white/40 transition-all"
         >
-          <option value="all">All</option>
-          <option value="veg">Veg</option>
-          <option value="non-veg">Non-Veg</option>
-        </select>
-        <div className="flex justify-end">
-          <button
-            onClick={() => navigate(-1)}
-            className="w-30 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-          >
-            <FaArrowLeft />
-          </button>
+          <ChevronLeft />
+        </button>
+        <div className="absolute bottom-12 left-8 md:left-20">
+          <h1 className="text-5xl md:text-7xl font-serif italic font-bold text-white mb-2">{restaurant.name}</h1>
+          <p className="text-amber-400 font-bold tracking-[0.3em] uppercase text-xs">{restaurant.cuisine} • {restaurant.rating} Stars</p>
         </div>
       </div>
-      {filteredMenu.length > 0 ? (
-        filteredMenu.map((item, idx) => (
-          <div
-            key={idx}
-            className={`flex justify-between items-center p-4 border rounded-xl mb-3 shadow-sm bg-white ${
-              item.available === false ? "opacity-50" : ""
-            }`}
-          >
-            <div className="flex items-end gap-4">
-           
-              <div className="relative w-44 h-48">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover rounded-xl shadow-sm z-0 transform transition-transform duration-300 ease-in-out hover:scale-110"
-                />
-                <h4 className="absolute  top-36 transform transition-transform duration-300 ease-in-out hover:scale-110 rounded text-gray-900 text-lg bg-gray-200/80 w-full font-bold ">
-                  {item.name}
-                </h4>
-              </div>
 
-              <div>
-                <h4 className="font-semibold text-xl">{item.name}</h4>
-                <p className="text-gray-600">₹{item.price}</p>
-                {item.type && (
-                  <p
-                    className={`text-sm font-medium ${
-                      item.type.toLowerCase() === "veg"
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {item.type}
-                  </p>
-                )}
-                <p className="text-gray-500">{item.description}</p>
-                {!item.available && (
-                  <p className="mt-1 text-sm text-red-500 font-semibold">
-                    Not Available
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-center">
-              <button
-                onClick={() => handleSubtract(idx)}
-                className="px-3 py-1 bg-gray-200 rounded-l hover:bg-gray-300"
-                disabled={!item.available}
-              >
-                -
-              </button>
-              <span className="px-4">{add[idx]}</span>
-              <button
-                onClick={() => handleAdd(idx)}
-                className="px-3 py-1 bg-gray-200 rounded-r hover:bg-gray-300"
-                disabled={!item.available}
-              >
-                +
-              </button>
-              <button
-                onClick={() => {
-                  addToCart({ ...item, qty: add[idx] || 1 }, restaurant._id)
-                  alert(`${item.name} added to cart`) ;
-                }}
-                className="px-3 py-3 bg-orange-400 text-white rounded-xl hover:bg-orange-600 ml-4 transition"
-                disabled={!item.available}
-              >
-                Add
-              </button>
-            </div>
+      <div className="max-w-5xl mx-auto px-6 -mt-10 relative z-10 pb-20">
+        {/* Filter Bar */}
+        <div className="bg-white p-4 rounded-3xl shadow-xl border border-stone-100 flex flex-col md:flex-row gap-4 mb-12">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-300" size={18} />
+            <input 
+              placeholder="Search dishes..."
+              className="w-full pl-12 pr-4 py-3 bg-stone-50 rounded-2xl outline-none focus:ring-2 focus:ring-amber-200 transition-all"
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-        ))
-      ) : (
-        <p className="text-gray-500 text-center">No items found.</p>
-      )}
+          <div className="flex gap-2">
+            {['all', 'veg', 'non-veg'].map(f => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-6 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all ${
+                  filter === f ? "bg-stone-900 text-white" : "bg-stone-100 text-stone-400 hover:bg-stone-200"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Menu Items */}
+        <div className="space-y-6">
+          {filteredMenu.map((item, idx) => (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              key={idx} 
+              className={`bg-white p-6 rounded-[2rem] border border-stone-100 flex flex-col md:flex-row items-center gap-6 shadow-sm hover:shadow-md transition-shadow ${!item.available ? 'opacity-50' : ''}`}
+            >
+              <div className="relative w-full md:w-44 h-44 shrink-0 overflow-hidden rounded-2xl">
+                <img src={item.image} className="w-full h-full object-cover" alt="" />
+                <div className={`absolute top-3 left-3 px-2 py-1 rounded-md text-[8px] font-bold uppercase tracking-tighter ${item.type === 'veg' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                  {item.type}
+                </div>
+              </div>
+
+              <div className="flex-1 text-center md:text-left">
+                <h4 className="text-2xl font-serif italic font-bold text-stone-800 mb-1">{item.name}</h4>
+                <p className="text-stone-400 text-sm mb-4 line-clamp-2 italic">{item.description}</p>
+                <p className="text-xl font-bold text-amber-600">₹{item.price}</p>
+              </div>
+
+              <button
+                disabled={!item.available}
+                onClick={() => {
+                  addToCart({ ...item, qty: 1 }, restaurant._id);
+                  toast.success(`${item.name} added to cart`, {
+                    style: { background: '#1c1917', color: '#fff', borderRadius: '1rem' }
+                  });
+                }}
+                className="w-full md:w-auto px-8 py-4 bg-stone-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-amber-600 transition-colors shadow-lg"
+              >
+                <Plus size={18} /> Add to Cart
+              </button>
+            </motion.div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

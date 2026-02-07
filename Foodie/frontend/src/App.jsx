@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Toaster } from 'react-hot-toast'; 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -24,6 +25,15 @@ import Contact from "./pages/ContactPage";
 const App = () => {
   return (
     <CartProvider>
+         <Toaster 
+        position="top-right" 
+        toastOptions={{
+          style: {
+            background: '#333',
+            color: '#fff',
+          },
+        }}
+      />
       <Router>
         <Routes>
           <Route element={<AuthLayout />}>

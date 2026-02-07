@@ -21,10 +21,13 @@ const userSchema = new mongoose.Schema({
     enum: ["customer", "restaurant", "admin"], 
     default: "customer" 
   },
-resetPasswordToken: String,
-resetPasswordExpire: Date,
-
-});
+isGuest: {
+    type: Boolean,
+    default: false
+  },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
+}, { timestamps: true });
 
 // Hash password before saving
 userSchema.pre("save", async function (next) {

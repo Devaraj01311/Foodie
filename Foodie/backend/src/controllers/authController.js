@@ -88,6 +88,8 @@ exports.logout = (req, res) => {
 
 // FORGOT PASSWORD
 exports.forgotPassword = async (req, res) => {
+
+  BASE_URL = process.env.BACKEND_URL;
   const { email } = req.body;
 
   try {
@@ -99,12 +101,12 @@ exports.forgotPassword = async (req, res) => {
 
    
     user.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
-    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes expiry
+    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; 
 
     await user.save({ validateBeforeSave: false });
 
 
-    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+    const resetUrl = `${BASE_URL}/reset-password/${resetToken}`;
 
     // Email transporter
     const transporter = nodemailer.createTransport({
@@ -148,6 +150,63 @@ exports.resetPassword = async (req, res) => {
     await user.save();
 
     res.json({ message: "Password reset successful" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+// GUEST LOGIN (Handles both Customer and Restaurant)
+exports.guestLogin = async (req, res) => {
+  try {
+    const role = req.body.role === "restaurant" ? "restaurant" : "customer";
+
+    const guestId = crypto.randomBytes(4).toString("hex");
+    const guestName = `Guest ${guestId}`;
+    const guestEmail = `guest_${guestId}@foodie.com`;
+    const guestPassword = crypto.randomBytes(16).toString("hex"); 
+
+    const newUser = new User({
+      name: guestName,
+      email: guestEmail,
+      password: guestPassword,
+      role: role,
+      isGuest: true
+    });
+
+    await newUser.save();
+
+    // Generate JWT Payload
+    const payload = {
+      id: newUser._id,
+      role: newUser.role,
+    };
+
+    if (role === "restaurant") {
+      payload.restaurantId = null; 
+    }
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    //  Send Response
+    res.status(201).json({
+      message: `Logged in as Guest ${role}`,
+      token,
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        isGuest: true
+      },
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -9,10 +9,20 @@ const restaurantRoutes = require("./routes/restaurantRoutes");
 const userRoutes = require("./routes/userRouter");
 const adminRoutes = require("./routes/adminRoutes");
 const contactRoutes = require("./routes/contactRoutes");
+
+
+const allowedOrigins = process.env.CORS_ORIGINS.split(",");
+
 const app = express();
 
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
 app.use(express.json());
-app.use(cors({ origin: true, credentials: true }));
+
+
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
