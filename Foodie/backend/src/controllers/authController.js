@@ -87,48 +87,65 @@ exports.logout = (req, res) => {
 };
 
 // FORGOT PASSWORD
-exports.forgotPassword = async (req, res) => {
 
-  BASE_URL = process.env.FRONT_URL;
-  
+exports.forgotPassword = async (req, res) => {
+  // 1. Always use 'const' or 'let'
+  const FRONT_URL = process.env.FRONT_URL; 
   const { email } = req.body;
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-    // Generate reset token
+    // 2. Generate reset token
     const resetToken = crypto.randomBytes(32).toString("hex");
 
-   
-    user.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
-    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; 
+    // 3. Hash and save to database
+    user.resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+    
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
 
     await user.save({ validateBeforeSave: false });
 
+    // 4. Create Reset URL (Check for typos here!)
+    const resetUrl = `${FRONT_URL}/reset-password/${resetToken}`;
 
-    const resetUrl = `${BASE_URL}/reset-password/${resetToken}`;
-
-    // Email transporter
+    // 5. Setup Transporter (Use Gmail App Password)
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: process.env.EMAIL_USER, 
-        pass: process.env.EMAIL_PASS, 
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS, // This must be the 16-character App Password
       },
     });
 
-    // Send mail
+    // 6. Send Mail
     await transporter.sendMail({
       from: `"Foodie Support" <${process.env.EMAIL_USER}>`,
       to: user.email,
       subject: "Password Reset Request",
-      text: `You requested a password reset. Click the link below:\n\n${resetUrl}\n\nThis link will expire in 10 minutes.`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px;">
+          <h2 style="color: #333;">Password Reset</h2>
+          <p>You requested a password reset. Click the button below to proceed:</p>
+          <a href="${resetUrl}" style="display: inline-block; padding: 12px 24px; background-color: #fbbf24; color: #000; text-decoration: none; font-weight: bold; border-radius: 8px;">
+            Reset My Password
+          </a>
+          <p style="margin-top: 20px; color: #666; font-size: 12px;">This link will expire in 15 minutes.</p>
+        </div>
+      `,
     });
 
     res.json({ message: "Password reset link sent to email" });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("EMAIL ERROR:", err); // This is where you saw the 't is not defined' error
+    res.status(500).json({ error: "Failed to send email. Please try again." });
   }
 };
 
