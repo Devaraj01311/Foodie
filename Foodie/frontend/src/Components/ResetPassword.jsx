@@ -26,8 +26,6 @@ const ResetPassword = () => {
       
       toast.success(data.message || "Credential update successful!", { id: toastId });
       setPassword("");
-
-      // Delay navigation to allow user to see the success state
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       console.error("Reset Password Error:", err.response?.data || err.message);
